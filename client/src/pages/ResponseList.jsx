@@ -84,7 +84,7 @@ function ResponseList() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 relative z-10">
+            <div className="min-h-screen bg-gray-50/80 backdrop-blur-[2px] relative z-10">
                 <Navigation />
                 <div className="text-center py-16 px-5">
                     <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
@@ -96,7 +96,7 @@ function ResponseList() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-50 relative z-10">
+            <div className="min-h-screen bg-gray-50/80 backdrop-blur-[2px] relative z-10">
                 <Navigation />
                 <div className="flex items-center justify-center p-5 min-h-[calc(100vh-80px)]">
                     <div className="text-center bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-md">
@@ -115,7 +115,7 @@ function ResponseList() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 relative z-10">
+        <div className="min-h-screen bg-gray-50/80 backdrop-blur-[2px] relative z-10">
             <Navigation />
             
             <main className="max-w-7xl mx-auto px-5 md:px-10 py-8">

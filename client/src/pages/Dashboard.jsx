@@ -55,7 +55,7 @@ function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 relative z-10">
+        <div className="min-h-screen bg-gray-50/80 backdrop-blur-[2px] relative z-10">
             <Navigation />
             
             <main className="max-w-7xl mx-auto px-5 md:px-10 py-8 md:py-10">
