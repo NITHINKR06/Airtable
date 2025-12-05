@@ -8,7 +8,6 @@ const router = express.Router();
 // Create GridFS storage engine
 const storage = new GridFsStorage({
     url: process.env.MONGODB_URI || 'mongodb://localhost:27017/airtable-form-builder',
-    options: { useNewUrlParser: true, useUnifiedTopology: true },
     file: (req, file) => {
         return {
             filename: `${Date.now()}-${file.originalname}`,

@@ -9,8 +9,7 @@ const responseSchema = new mongoose.Schema({
     },
     airtableRecordId: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     answers: {
         type: mongoose.Schema.Types.Mixed,
