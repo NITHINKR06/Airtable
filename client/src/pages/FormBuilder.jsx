@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import ConditionBuilder from '../components/ConditionBuilder';
+import ServerStatus from '../components/ServerStatus';
 import '../styles/FormBuilder.css';
 
 function FormBuilder() {

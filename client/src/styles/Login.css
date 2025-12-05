@@ -99,6 +99,18 @@
   transform: translateY(0);
 }
 
+.login-button:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.login-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .airtable-icon {
   width: 24px;
   height: 24px;
@@ -129,4 +141,73 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Server Status Button Styles */
+.server-status-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.server-status-button:hover:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.server-status-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.server-status-button.awake {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.server-status-button.sleeping {
+  background: #fef3c7;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+.server-status-button.checking {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+.status-icon {
+  font-size: 18px;
+}
+
+.status-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #93c5fd;
+  border-top-color: #1e40af;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.server-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #92400e;
+  margin: 0;
+  padding: 10px;
+  background: #fef3c7;
+  border-radius: 8px;
 }
