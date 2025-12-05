@@ -234,11 +234,9 @@ function FormBuilder() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50/80 backdrop-blur-[2px] relative z-10">
-                <div className="text-center py-16 px-5">
-                    <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading form...</p>
-                </div>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50/80 backdrop-blur-[2px] relative z-10">
+                <div className="w-12 h-12 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-600 text-sm">Loading...</p>
             </div>
         );
     }

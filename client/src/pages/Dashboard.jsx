@@ -71,9 +71,9 @@ function Dashboard() {
                 </div>
 
                 {loading && (
-                    <div className="text-center py-16 px-5 bg-white rounded-xl shadow-sm border border-gray-200">
-                        <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-gray-600">Loading forms...</p>
+                    <div className="flex flex-col items-center justify-center py-16 px-5">
+                        <div className="w-12 h-12 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+                        <p className="text-gray-600 text-sm">Loading...</p>
                     </div>
                 )}
 
