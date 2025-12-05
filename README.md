@@ -332,6 +332,7 @@ Modify existing forms and configure Airtable base and table connections.
 View all submissions with expandable details, status tracking, and export options.
 
 ![Form Responses](client/public/forms_responses.png)
+![Form Responses Link](client/public/response_link.png)
 
 ## License
 
