@@ -12,14 +12,35 @@ const webhookRoutes = require('./routes/webhooks');
 
 const app = express();
 
+// Helper function to extract origin from URL
+const getOrigin = (url) => {
+  if (!url) return 'http://localhost:5173';
+  try {
+    const urlObj = new URL(url);
+    return urlObj.origin; // Returns protocol + hostname + port
+  } catch {
+    return url; // If not a valid URL, return as-is
+  }
+};
+
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: getOrigin(process.env.FRONTEND_URL),
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Root endpoint (CORS-friendly for any origin)
+app.get('/', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.json({
+    status: 'ok',
+    message: 'Airtable Form Builder API',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Health check endpoint (CORS-friendly for any origin)
 app.get('/health', (req, res) => {
