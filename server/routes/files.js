@@ -1,17 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Grid = require('gridfs-stream');
 
 const router = express.Router();
-
-// Initialize GridFS
-let gfs;
-const conn = mongoose.connection;
-
-conn.once('open', () => {
-    gfs = Grid(conn.db, mongoose.mongo);
-    gfs.collection('uploads');
-});
 
 /**
  * GET /api/files/:filename
@@ -21,20 +11,24 @@ router.get('/:filename', async (req, res) => {
     try {
         const { filename } = req.params;
 
-        if (!gfs) {
-            return res.status(500).json({
-                error: { message: 'GridFS not initialized' }
-            });
-        }
+        // Get GridFS bucket
+        const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+            bucketName: 'uploads'
+        });
 
-        // Find the file in GridFS
-        const file = await gfs.files.findOne({ filename: filename });
+        // Find the file
+        const files = await mongoose.connection.db
+            .collection('uploads.files')
+            .find({ filename: filename })
+            .toArray();
 
-        if (!file) {
+        if (!files || files.length === 0) {
             return res.status(404).json({
                 error: { message: 'File not found' }
             });
         }
+
+        const file = files[0];
 
         // Check if file is an image or other type
         const isImage = file.contentType && file.contentType.startsWith('image/');
@@ -44,23 +38,25 @@ router.get('/:filename', async (req, res) => {
         res.set('Content-Disposition', isImage ? 'inline' : `attachment; filename="${file.filename}"`);
 
         // Create read stream and pipe to response
-        const readStream = gfs.createReadStream({
-            filename: file.filename
-        });
+        const downloadStream = bucket.openDownloadStreamByName(filename);
 
-        readStream.on('error', (err) => {
+        downloadStream.on('error', (err) => {
             console.error('Stream error:', err);
-            res.status(500).json({
-                error: { message: 'Error streaming file' }
-            });
+            if (!res.headersSent) {
+                res.status(500).json({
+                    error: { message: 'Error streaming file' }
+                });
+            }
         });
 
-        readStream.pipe(res);
+        downloadStream.pipe(res);
     } catch (error) {
         console.error('File retrieval error:', error);
-        res.status(500).json({
-            error: { message: 'Failed to retrieve file' }
-        });
+        if (!res.headersSent) {
+            res.status(500).json({
+                error: { message: 'Failed to retrieve file' }
+            });
+        }
     }
 });
 
@@ -72,13 +68,25 @@ router.delete('/:filename', async (req, res) => {
     try {
         const { filename } = req.params;
 
-        if (!gfs) {
-            return res.status(500).json({
-                error: { message: 'GridFS not initialized' }
+        // Get GridFS bucket
+        const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+            bucketName: 'uploads'
+        });
+
+        // Find the file
+        const files = await mongoose.connection.db
+            .collection('uploads.files')
+            .find({ filename: filename })
+            .toArray();
+
+        if (!files || files.length === 0) {
+            return res.status(404).json({
+                error: { message: 'File not found' }
             });
         }
 
-        await gfs.files.deleteOne({ filename: filename });
+        // Delete the file
+        await bucket.delete(files[0]._id);
 
         res.json({
             message: 'File deleted successfully'
