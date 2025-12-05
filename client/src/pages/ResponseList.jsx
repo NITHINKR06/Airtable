@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import ServerStatus from '../components/ServerStatus';
+import { Download, Inbox } from 'lucide-react';
 import '../styles/ResponseList.css';
 
 function ResponseList() {
@@ -125,7 +126,7 @@ function ResponseList() {
                                     window.open(`${import.meta.env.VITE_API_URL}/forms/${formId}/responses/export/csv?token=${token}`, '_blank');
                                 }}
                             >
-                                📥 CSV
+                                <Download size={14} /> CSV
                             </button>
                             <button
                                 className="export-btn"
@@ -134,7 +135,7 @@ function ResponseList() {
                                     window.open(`${import.meta.env.VITE_API_URL}/forms/${formId}/responses/export/json?token=${token}`, '_blank');
                                 }}
                             >
-                                📥 JSON
+                                <Download size={14} /> JSON
                             </button>
                         </div>
                     )}
@@ -144,7 +145,7 @@ function ResponseList() {
             <main className="response-main">
                 {responses.length === 0 ? (
                     <div className="empty-state">
-                        <div className="empty-icon">📭</div>
+                        <div className="empty-icon"><Inbox size={48} /></div>
                         <h2>No responses yet</h2>
                         <p>Share your form to start collecting responses</p>
                         <div className="share-link">

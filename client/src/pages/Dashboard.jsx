@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import ServerStatus from '../components/ServerStatus';
+import { ClipboardList, Database, Table2 } from 'lucide-react';
 import '../styles/Dashboard.css';
 
 function Dashboard() {
@@ -92,7 +93,7 @@ function Dashboard() {
 
                 {!loading && !error && forms.length === 0 && (
                     <div className="empty-state">
-                        <div className="empty-icon">📋</div>
+                        <div className="empty-icon"><ClipboardList size={48} /></div>
                         <h2>No forms yet</h2>
                         <p>Create your first form to get started</p>
                         <Link to="/forms/new" className="create-button">
@@ -118,10 +119,10 @@ function Dashboard() {
                                     </p>
                                     <div className="form-meta">
                                         <span title="Airtable Base">
-                                            📊 {form.airtableBaseName || 'Base'}
+                                            <Database size={14} /> {form.airtableBaseName || 'Base'}
                                         </span>
                                         <span title="Airtable Table">
-                                            📋 {form.airtableTableName || 'Table'}
+                                            <Table2 size={14} /> {form.airtableTableName || 'Table'}
                                         </span>
                                     </div>
                                     <p className="form-date">

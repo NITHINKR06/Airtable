@@ -1,6 +1,7 @@
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ClipboardList, GitBranch, Save, RefreshCw, Search, CheckCircle, Moon, Loader, AlertTriangle, Clock } from 'lucide-react';
 import '../styles/Login.css';
 
 function Login() {
@@ -70,19 +71,19 @@ function Login() {
                 <div className="login-content">
                     <div className="features-list">
                         <div className="feature">
-                            <span className="feature-icon">📋</span>
+                            <span className="feature-icon"><ClipboardList size={24} /></span>
                             <span>Create custom forms from Airtable fields</span>
                         </div>
                         <div className="feature">
-                            <span className="feature-icon">🔀</span>
+                            <span className="feature-icon"><GitBranch size={24} /></span>
                             <span>Add conditional logic to show/hide questions</span>
                         </div>
                         <div className="feature">
-                            <span className="feature-icon">💾</span>
+                            <span className="feature-icon"><Save size={24} /></span>
                             <span>Save responses to Airtable automatically</span>
                         </div>
                         <div className="feature">
-                            <span className="feature-icon">🔄</span>
+                            <span className="feature-icon"><RefreshCw size={24} /></span>
                             <span>Keep data synced with webhooks</span>
                         </div>
                     </div>
@@ -94,25 +95,25 @@ function Login() {
                     >
                         {serverStatus === 'unknown' && (
                             <>
-                                <span className="status-icon">🔍</span>
+                                <Search size={18} />
                                 Check Server Status
                             </>
                         )}
                         {serverStatus === 'checking' && (
                             <>
-                                <span className="status-spinner"></span>
+                                <Loader size={18} className="spinning" />
                                 Waking Up Server... Please wait
                             </>
                         )}
                         {serverStatus === 'awake' && (
                             <>
-                                <span className="status-icon">✅</span>
+                                <CheckCircle size={18} />
                                 Server is Awake
                             </>
                         )}
                         {serverStatus === 'sleeping' && (
                             <>
-                                <span className="status-icon">😴</span>
+                                <Moon size={18} />
                                 Server is Sleeping - Click to Wake
                             </>
                         )}
@@ -121,8 +122,8 @@ function Login() {
                     {serverStatus !== 'awake' && (
                         <p className="server-hint">
                             {serverStatus === 'checking'
-                                ? '⏳ Please wait while the server wakes up (may take 30-60 seconds)...'
-                                : '⚠️ Please check server status before logging in'}
+                                ? <><Clock size={14} /> Please wait while the server wakes up (may take 30-60 seconds)...</>
+                                : <><AlertTriangle size={14} /> Please check server status before logging in</>}
                         </p>
                     )}
 

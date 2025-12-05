@@ -189,20 +189,15 @@
   color: #1e40af;
 }
 
-.status-icon {
-  font-size: 18px;
-}
-
-.status-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #93c5fd;
-  border-top-color: #1e40af;
-  border-radius: 50%;
+.spinning {
   animation: spin 1s linear infinite;
 }
 
 .server-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   text-align: center;
   font-size: 12px;
   color: #92400e;

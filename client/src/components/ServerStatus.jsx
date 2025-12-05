@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Search, CheckCircle, Moon, Loader } from 'lucide-react';
 import './ServerStatus.css';
 
 function ServerStatus() {
@@ -30,10 +31,10 @@ function ServerStatus() {
 
     const getStatusIcon = () => {
         switch (serverStatus) {
-            case 'checking': return null;
-            case 'awake': return '✅';
-            case 'sleeping': return '😴';
-            default: return '🔍';
+            case 'checking': return <Loader className="status-icon spinning" size={16} />;
+            case 'awake': return <CheckCircle className="status-icon" size={16} />;
+            case 'sleeping': return <Moon className="status-icon" size={16} />;
+            default: return <Search className="status-icon" size={16} />;
         }
     };
 
@@ -54,17 +55,13 @@ function ServerStatus() {
                 disabled={serverStatus === 'checking'}
                 title="Check if server is awake"
             >
-                {serverStatus === 'checking' ? (
-                    <span className="status-spinner-small"></span>
-                ) : (
-                    <span className="status-icon">{getStatusIcon()}</span>
-                )}
+                {getStatusIcon()}
                 <span className="status-text">{getStatusText()}</span>
             </button>
 
             {isExpanded && serverStatus === 'sleeping' && (
                 <div className="status-tooltip">
-                    💡 Server may take 30-60s to wake up. Click to retry.
+                    <Moon size={14} /> Server may take 30-60s to wake up. Click to retry.
                 </div>
             )}
         </div>
