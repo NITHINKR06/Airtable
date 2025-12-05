@@ -313,20 +313,25 @@ Other field types are automatically filtered out.
 
 ## Screenshots
 
-### Login Page
-Users authenticate via Airtable OAuth to access their bases.
-
 ### Dashboard
 View all created forms with quick actions.
 
-### Form Builder
-Select Airtable fields and configure conditional logic.
+![Dashboard](client/public/dashboard.png)
 
-### Form Viewer
-Fill out forms with real-time conditional logic.
+### Create New Form
+Build your form step by step with form details and Airtable connection.
 
-### Response List
-View all submissions with expandable details.
+![Create Form](client/public/create_form.png)
+
+### Edit Form
+Modify existing forms and configure Airtable base and table connections.
+
+![Edit Form](client/public/edit_form.png)
+
+### Form Responses
+View all submissions with expandable details, status tracking, and export options.
+
+![Form Responses](client/public/forms_responses.png)
 
 ## License
 

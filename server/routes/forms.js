@@ -426,6 +426,50 @@ router.get('/:formId/responses/export/csv', authenticate, async (req, res) => {
 
         const responses = await Response.find({ formId }).sort({ createdAt: -1 });
 
+        // Helper function to format value for CSV
+        const formatValueForCSV = (value) => {
+            if (value === null || value === undefined) {
+                return '';
+            }
+            
+            // Handle arrays
+            if (Array.isArray(value)) {
+                if (value.length === 0) {
+                    return '';
+                }
+                // Check if it's an array of objects (like file attachments)
+                if (typeof value[0] === 'object' && value[0] !== null) {
+                    // Handle file attachments
+                    if (value[0].url) {
+                        return value.map(item => item.url || item.filename || JSON.stringify(item)).join('; ');
+                    }
+                    // Handle other object arrays
+                    return value.map(item => JSON.stringify(item)).join('; ');
+                }
+                // Handle array of primitives
+                return value.join('; ');
+            }
+            
+            // Handle objects
+            if (typeof value === 'object') {
+                return JSON.stringify(value);
+            }
+            
+            // Handle primitives
+            return String(value);
+        };
+
+        // Escape CSV values
+        const escapeCSV = (val) => {
+            if (val === null || val === undefined || val === '') return '';
+            const str = String(val);
+            // Always escape if contains comma, quote, or newline
+            if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+                return `"${str.replace(/"/g, '""')}"`;
+            }
+            return str;
+        };
+
         // Build CSV headers
         const questionLabels = form.questions.map(q => q.label);
         const headers = ['ID', 'Airtable Record ID', 'Status', 'Submitted At', ...questionLabels];
@@ -434,35 +478,20 @@ router.get('/:formId/responses/export/csv', authenticate, async (req, res) => {
         const rows = responses.map(r => {
             const row = [
                 r._id.toString(),
-                r.airtableRecordId,
-                r.status,
+                r.airtableRecordId || '',
+                r.status || 'active',
                 new Date(r.createdAt).toISOString()
             ];
 
             // Add answers in order of questions
             for (const question of form.questions) {
                 const value = r.answers?.[question.questionKey];
-                if (value === null || value === undefined) {
-                    row.push('');
-                } else if (Array.isArray(value)) {
-                    row.push(value.join('; '));
-                } else {
-                    row.push(String(value));
-                }
+                const formattedValue = formatValueForCSV(value);
+                row.push(formattedValue);
             }
 
             return row;
         });
-
-        // Escape CSV values
-        const escapeCSV = (val) => {
-            if (val === null || val === undefined) return '';
-            const str = String(val);
-            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-                return `"${str.replace(/"/g, '""')}"`;
-            }
-            return str;
-        };
 
         // Build CSV string
         const csvContent = [
@@ -470,9 +499,12 @@ router.get('/:formId/responses/export/csv', authenticate, async (req, res) => {
             ...rows.map(row => row.map(escapeCSV).join(','))
         ].join('\n');
 
+        // Add UTF-8 BOM for Excel compatibility
+        const csvWithBOM = '\uFEFF' + csvContent;
+
         res.setHeader('Content-Disposition', `attachment; filename="${form.name}-responses.csv"`);
-        res.setHeader('Content-Type', 'text/csv');
-        res.send(csvContent);
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.send(csvWithBOM);
     } catch (error) {
         console.error('Export CSV error:', error);
         res.status(500).json({ error: { message: 'Failed to export responses' } });
