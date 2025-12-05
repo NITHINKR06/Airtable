@@ -30,12 +30,19 @@ REACT_APP_API_URL=http://localhost:5000/api
 ### 3. Airtable OAuth Setup
 
 1. Visit: https://airtable.com/developers/web/guides/oauth-integration
-2. Click "Create a new OAuth app"
+2. Click "Create a new OAuth app" (or edit your existing app)
 3. Fill in:
    - **App name**: Form Builder (or any name)
-   - **Redirect URI**: `http://localhost:5000/api/auth/airtable/callback`
-   - **Scopes**: Select all scopes (data.records:read, data.records:write, schema.bases:read, schema.bases:write)
-4. Copy the **Client ID** and **Client Secret** to your `server/.env` file
+   - **Redirect URI**: `http://localhost:5000/api/auth/airtable/callback` (must match exactly, no trailing slash)
+   - **Scopes**: Select these scopes:
+     - `data.records:read` - See the data in records
+     - `data.records:write` - Create, edit, and delete records
+     - `schema.bases:read` - See the structure of a base
+     - `schema.bases:write` - Edit the structure of a base
+4. **IMPORTANT**: Click "Save" or "Update" at the bottom of the page to save your changes
+5. Copy the **Client ID** and **Client Secret** to your `server/.env` file
+6. **Wait 1-2 minutes** after saving for Airtable to propagate the changes
+7. Make sure you're authorizing with the same Airtable account that created the OAuth app (for development mode)
 
 ### 4. MongoDB Setup
 

@@ -41,6 +41,9 @@ router.get('/airtable', (req, res) => {
   // Store code verifier in session for later use
   req.session.codeVerifier = codeVerifier;
   
+  // Normalize redirect URI (remove trailing slashes, ensure proper format)
+  const normalizedRedirectUri = AIRTABLE_REDIRECT_URI.replace(/\/$/, '');
+  
   // Save session before redirect
   req.session.save((err) => {
     if (err) {
@@ -51,7 +54,7 @@ router.get('/airtable', (req, res) => {
     // Build OAuth URL using URLSearchParams for proper encoding
     const params = new URLSearchParams({
       client_id: AIRTABLE_CLIENT_ID,
-      redirect_uri: AIRTABLE_REDIRECT_URI,
+      redirect_uri: normalizedRedirectUri,
       response_type: 'code',
       scope: 'data.records:read data.records:write schema.bases:read schema.bases:write',
       state: state,
@@ -61,9 +64,15 @@ router.get('/airtable', (req, res) => {
     
     const authUrl = `https://airtable.com/oauth2/v1/authorize?${params.toString()}`;
     
-    console.log('Redirecting to Airtable OAuth with PKCE');
+    // Enhanced logging for debugging
+    console.log('=== Airtable OAuth Request ===');
+    console.log('Client ID:', AIRTABLE_CLIENT_ID);
+    console.log('Redirect URI:', normalizedRedirectUri);
     console.log('State token:', state);
-    console.log('Redirect URI:', AIRTABLE_REDIRECT_URI);
+    console.log('Code challenge method: S256');
+    console.log('Scopes: data.records:read data.records:write schema.bases:read schema.bases:write');
+    console.log('Full OAuth URL:', authUrl);
+    console.log('==============================');
     
     res.redirect(authUrl);
   });
@@ -82,14 +91,22 @@ router.get('/airtable/callback', async (req, res) => {
       console.error('Request query:', req.query);
       console.error('Session state:', req.session.oauthState);
       console.error('Session ID:', req.sessionID);
-      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
-      return res.redirect(`${frontendUrl}/?error=${encodeURIComponent(error_description || error)}`);
+      
+      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+      
+      // Provide more helpful error messages for common issues
+      let errorMessage = error_description || error;
+      if (error === 'access_denied' && error_description && error_description.includes('cannot be used outside of development')) {
+        errorMessage = 'OAuth Application Configuration Required: Your Airtable OAuth app is in development mode. Please visit https://www.airtable.com/create/oauth to configure your app settings. Make sure your redirect URI matches exactly: ' + AIRTABLE_REDIRECT_URI;
+      }
+      
+      return res.redirect(`${frontendUrl}/?error=${encodeURIComponent(errorMessage)}`);
     }
 
     // Check if code is present
     if (!code) {
       console.error('No authorization code received');
-      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
+      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       return res.redirect(`${frontendUrl}/?error=${encodeURIComponent('No authorization code received')}`);
     }
 
@@ -100,7 +117,7 @@ router.get('/airtable/callback', async (req, res) => {
         sessionState: req.session.oauthState,
         sessionId: req.sessionID 
       });
-      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
+      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       return res.redirect(`${frontendUrl}/?error=${encodeURIComponent('Invalid or missing state parameter')}`);
     }
 
@@ -110,14 +127,14 @@ router.get('/airtable/callback', async (req, res) => {
         sessionState: req.session.oauthState,
         sessionId: req.sessionID 
       });
-      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
+      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       return res.redirect(`${frontendUrl}/?error=${encodeURIComponent('State parameter mismatch')}`);
     }
 
     // Verify code verifier exists in session
     if (!req.session.codeVerifier) {
       console.error('Code verifier not found in session');
-      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
+      const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       return res.redirect(`${frontendUrl}/?error=${encodeURIComponent('PKCE code verifier missing')}`);
     }
 
@@ -165,7 +182,7 @@ router.get('/airtable/callback', async (req, res) => {
     req.session.accessToken = access_token;
 
     // Redirect to frontend
-    const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3001';
+    const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
     res.redirect(`${frontendUrl}/dashboard`);
   } catch (error) {
     console.error('OAuth callback error:', error.response?.data || error.message);
@@ -220,6 +237,27 @@ router.get('/token', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+/**
+ * Validate OAuth configuration (for debugging)
+ */
+router.get('/config/validate', (req, res) => {
+  const config = {
+    clientId: AIRTABLE_CLIENT_ID ? '✓ Set' : '✗ Missing',
+    clientSecret: AIRTABLE_CLIENT_SECRET ? '✓ Set' : '✗ Missing',
+    redirectUri: AIRTABLE_REDIRECT_URI || '✗ Missing',
+    redirectUriNormalized: AIRTABLE_REDIRECT_URI ? AIRTABLE_REDIRECT_URI.replace(/\/$/, '') : '✗ Missing',
+    expectedRedirectUri: 'http://localhost:5000/api/auth/airtable/callback',
+    isValid: !!(AIRTABLE_CLIENT_ID && AIRTABLE_REDIRECT_URI)
+  };
+  
+  // Check if redirect URI matches expected format
+  if (config.redirectUriNormalized !== config.expectedRedirectUri) {
+    config.warning = `Redirect URI mismatch! Expected: ${config.expectedRedirectUri}, Got: ${config.redirectUriNormalized}`;
+  }
+  
+  res.json(config);
 });
 
 module.exports = router;
