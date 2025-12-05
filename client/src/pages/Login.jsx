@@ -40,8 +40,8 @@ function Login() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-5">
-                <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-12 flex flex-col items-center">
+            <div className="min-h-screen flex items-center justify-center p-5 relative z-10">
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl max-w-md w-full p-12 flex flex-col items-center border border-white/20">
                     <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
                     <p className="text-gray-600">Loading...</p>
                 </div>
@@ -62,8 +62,8 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-5">
-            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-10 md:p-12">
+        <div className="min-h-screen flex items-center justify-center p-5 relative z-10">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl max-w-md w-full p-10 md:p-12 border border-white/20">
                 <div className="text-center mb-10">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Airtable Form Builder</h1>
                     <p className="text-gray-600 text-sm">Create dynamic forms connected to your Airtable bases</p>

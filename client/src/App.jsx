@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import FormBuilder from './pages/FormBuilder';
 import FormViewer from './pages/FormViewer';
 import ResponseList from './pages/ResponseList';
+import AnimatedBackground from './components/AnimatedBackground';
 
 // Protected Route component
 function ProtectedRoute({ children }) {
@@ -12,7 +13,7 @@ function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative z-10">
         <div className="w-12 h-12 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mb-5"></div>
         <p className="text-gray-600 text-base">Loading...</p>
       </div>
@@ -72,7 +73,7 @@ function AppRoutes() {
 
       {/* 404 */}
       <Route path="*" element={
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center p-5">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center p-5 relative z-10">
           <h1 className="text-[120px] text-indigo-600 m-0 font-bold">404</h1>
           <p className="text-gray-600 m-0 mb-8 text-xl">Page not found</p>
           <a 
@@ -91,6 +92,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <AnimatedBackground />
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>

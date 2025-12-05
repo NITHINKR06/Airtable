@@ -152,7 +152,7 @@ function FormViewer() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5 relative z-10">
                 <div className="text-center">
                     <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading form...</p>
@@ -163,7 +163,7 @@ function FormViewer() {
 
     if (error && !form) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5 relative z-10">
                 <div className="text-center bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-md">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
                     <p className="text-red-600 mb-6">{error}</p>
@@ -180,7 +180,7 @@ function FormViewer() {
 
     if (submitted) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5 relative z-10">
                 <div className="text-center bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10 max-w-md">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <span className="text-green-600 text-3xl font-bold">✓</span>
@@ -209,7 +209,7 @@ function FormViewer() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 md:py-12 px-5">
+        <div className="min-h-screen bg-gray-50 py-8 md:py-12 px-5 relative z-10">
             <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <header className="px-6 md:px-8 py-6 md:py-8 border-b border-gray-200">
                     <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{form.name}</h1>
