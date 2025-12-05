@@ -464,6 +464,7 @@ function FormBuilder() {
                     </button>
                 </div>
             </main>
+            <ServerStatus />
         </div>
     );
 }

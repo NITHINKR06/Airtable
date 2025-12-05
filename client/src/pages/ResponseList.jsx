@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
+import ServerStatus from '../components/ServerStatus';
 import '../styles/ResponseList.css';
 
 function ResponseList() {
@@ -228,6 +229,7 @@ function ResponseList() {
                     </div>
                 )}
             </main>
+            <ServerStatus />
         </div>
     );
 }

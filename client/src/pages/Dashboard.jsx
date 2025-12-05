@@ -151,6 +151,7 @@ function Dashboard() {
                     </div>
                 )}
             </main>
+            <ServerStatus />
         </div>
     );
 }

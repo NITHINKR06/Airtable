@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { shouldShowQuestion } from '../utils/conditionalLogic';
 import FormField from '../components/FormField';
+import ServerStatus from '../components/ServerStatus';
 import '../styles/FormViewer.css';
 
 function FormViewer() {
@@ -218,6 +219,7 @@ function FormViewer() {
                     </div>
                 </form>
             </div>
+            <ServerStatus />
         </div>
     );
 }
