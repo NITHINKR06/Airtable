@@ -18,9 +18,10 @@ function FormField({ question, value, onChange, error }) {
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        // For now, we'll just store file names - in production you'd upload to a service
+        // Store actual File objects instead of blob URLs
+        // The files will be uploaded when the form is submitted
         const attachments = files.map(file => ({
-            url: URL.createObjectURL(file),
+            file: file, // Store the actual File object
             filename: file.name,
             size: file.size,
             type: file.type
@@ -102,7 +103,7 @@ function FormField({ question, value, onChange, error }) {
                                 setDragOver(false);
                                 const files = Array.from(e.dataTransfer.files);
                                 const attachments = files.map(file => ({
-                                    url: URL.createObjectURL(file),
+                                    file: file,
                                     filename: file.name,
                                     size: file.size,
                                     type: file.type

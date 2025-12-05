@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 require('dotenv').config();
 
 // Import routes
@@ -9,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const formRoutes = require('./routes/forms');
 const airtableRoutes = require('./routes/airtable');
 const webhookRoutes = require('./routes/webhooks');
+const uploadRoutes = require('./routes/upload');
 
 const app = express();
 
@@ -32,6 +34,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Serve uploaded files as static content
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Root endpoint (CORS-friendly for any origin)
 app.get('/', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -52,6 +57,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/forms', formRoutes);
 app.use('/api/airtable', airtableRoutes);
+app.use('/api/upload', uploadRoutes);
 app.use('/webhooks', webhookRoutes);
 
 // Error handling middleware

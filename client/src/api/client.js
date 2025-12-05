@@ -37,4 +37,24 @@ api.interceptors.response.use(
     }
 );
 
+/**
+ * Upload files to the server
+ * @param {File[]} files - Array of File objects to upload
+ * @returns {Promise<Array>} Array of uploaded file objects with URLs
+ */
+export const uploadFiles = async (files) => {
+    const formData = new FormData();
+    files.forEach(file => {
+        formData.append('files', file);
+    });
+
+    const response = await api.post('/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+
+    return response.data.files;
+};
+
 export default api;

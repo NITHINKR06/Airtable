@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/client';
+import api, { uploadFiles } from '../api/client';
 import { shouldShowQuestion } from '../utils/conditionalLogic';
 import FormField from '../components/FormField';
 import ServerStatus from '../components/ServerStatus';
@@ -109,7 +109,32 @@ function FormViewer() {
 
         try {
             setSubmitting(true);
-            await api.post(`/forms/${formId}/submit`, { answers: filteredAnswers });
+            setError(null);
+
+            // Upload files for attachment fields
+            const processedAnswers = { ...filteredAnswers };
+
+            for (const [questionKey, answer] of Object.entries(processedAnswers)) {
+                // Find the question to check its type
+                const question = form.questions.find(q => q.questionKey === questionKey);
+
+                if (question?.type === 'multipleAttachments' && Array.isArray(answer)) {
+                    // Extract File objects from attachments
+                    const files = answer
+                        .filter(att => att.file instanceof File)
+                        .map(att => att.file);
+
+                    if (files.length > 0) {
+                        // Upload files to server
+                        const uploadedFiles = await uploadFiles(files);
+
+                        // Replace with uploaded file URLs
+                        processedAnswers[questionKey] = uploadedFiles;
+                    }
+                }
+            }
+
+            await api.post(`/forms/${formId}/submit`, { answers: processedAnswers });
             setSubmitted(true);
         } catch (err) {
             console.error('Error submitting form:', err);
@@ -214,7 +239,7 @@ function FormViewer() {
                             className="submit-button"
                             disabled={submitting}
                         >
-                            {submitting ? 'Submitting...' : 'Submit'}
+                            {submitting ? 'Uploading & Submitting...' : 'Submit'}
                         </button>
                     </div>
                 </form>
