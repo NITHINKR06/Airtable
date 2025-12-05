@@ -1,19 +1,19 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../uploads'));
-    },
-    filename: (req, file, cb) => {
-        // Generate unique filename: uuid-originalname
-        const uniqueName = `${uuidv4()}-${file.originalname}`;
-        cb(null, uniqueName);
+// Create GridFS storage engine
+const storage = new GridFsStorage({
+    url: process.env.MONGODB_URI || 'mongodb://localhost:27017/airtable-form-builder',
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
+    file: (req, file) => {
+        return {
+            filename: `${Date.now()}-${file.originalname}`,
+            bucketName: 'uploads' // Collection name will be uploads.files and uploads.chunks
+        };
     }
 });
 
@@ -41,7 +41,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// Configure multer
+// Configure multer with GridFS storage
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
@@ -52,7 +52,7 @@ const upload = multer({
 
 /**
  * POST /api/upload
- * Upload one or more files
+ * Upload one or more files to GridFS
  */
 router.post('/', upload.array('files', 10), (req, res) => {
     try {
@@ -65,7 +65,7 @@ router.post('/', upload.array('files', 10), (req, res) => {
         // Build public URLs for uploaded files
         const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
         const uploadedFiles = req.files.map(file => ({
-            url: `${baseUrl}/uploads/${file.filename}`,
+            url: `${baseUrl}/api/files/${file.filename}`,
             filename: file.originalname,
             size: file.size,
             type: file.mimetype
