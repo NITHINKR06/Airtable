@@ -4,7 +4,6 @@ import api, { uploadFiles } from '../api/client';
 import { shouldShowQuestion } from '../utils/conditionalLogic';
 import FormField from '../components/FormField';
 import ServerStatus from '../components/ServerStatus';
-import '../styles/FormViewer.css';
 
 function FormViewer() {
     const { formId } = useParams();
@@ -153,10 +152,10 @@ function FormViewer() {
 
     if (loading) {
         return (
-            <div className="form-viewer-container">
-                <div className="loading-state">
-                    <div className="loading-spinner"></div>
-                    <p>Loading form...</p>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+                <div className="text-center">
+                    <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading form...</p>
                 </div>
             </div>
         );
@@ -164,11 +163,16 @@ function FormViewer() {
 
     if (error && !form) {
         return (
-            <div className="form-viewer-container">
-                <div className="error-state">
-                    <h2>Error</h2>
-                    <p>{error}</p>
-                    <button onClick={() => navigate('/')}>Go Home</button>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+                <div className="text-center bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-md">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+                    <p className="text-red-600 mb-6">{error}</p>
+                    <button 
+                        onClick={() => navigate('/')}
+                        className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        Go Home
+                    </button>
                 </div>
             </div>
         );
@@ -176,22 +180,27 @@ function FormViewer() {
 
     if (submitted) {
         return (
-            <div className="form-viewer-container">
-                <div className="success-state">
-                    <div className="success-icon">✓</div>
-                    <h2>Thank You!</h2>
-                    <p>Your response has been submitted successfully.</p>
-                    <button onClick={() => {
-                        setSubmitted(false);
-                        setAnswers({});
-                        form.questions.forEach(q => {
-                            if (q.type === 'multipleSelects' || q.type === 'multipleAttachments') {
-                                setAnswers(prev => ({ ...prev, [q.questionKey]: [] }));
-                            } else {
-                                setAnswers(prev => ({ ...prev, [q.questionKey]: '' }));
-                            }
-                        });
-                    }}>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+                <div className="text-center bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10 max-w-md">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span className="text-green-600 text-3xl font-bold">✓</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3">Thank You!</h2>
+                    <p className="text-gray-600 mb-6">Your response has been submitted successfully.</p>
+                    <button 
+                        onClick={() => {
+                            setSubmitted(false);
+                            setAnswers({});
+                            form.questions.forEach(q => {
+                                if (q.type === 'multipleSelects' || q.type === 'multipleAttachments') {
+                                    setAnswers(prev => ({ ...prev, [q.questionKey]: [] }));
+                                } else {
+                                    setAnswers(prev => ({ ...prev, [q.questionKey]: '' }));
+                                }
+                            });
+                        }}
+                        className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+                    >
                         Submit Another Response
                     </button>
                 </div>
@@ -200,43 +209,50 @@ function FormViewer() {
     }
 
     return (
-        <div className="form-viewer-container">
-            <div className="form-viewer-card">
-                <header className="form-header">
-                    <h1>{form.name}</h1>
-                    {form.description && <p className="form-description">{form.description}</p>}
+        <div className="min-h-screen bg-gray-50 py-8 md:py-12 px-5">
+            <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <header className="px-6 md:px-8 py-6 md:py-8 border-b border-gray-200">
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{form.name}</h1>
+                    {form.description && <p className="text-gray-600 text-sm md:text-base">{form.description}</p>}
                 </header>
 
                 {error && (
-                    <div className="error-banner">
-                        {error}
-                        <button onClick={() => setError(null)}>×</button>
+                    <div className="bg-red-50 border-b border-red-200 text-red-800 px-6 md:px-8 py-3 flex justify-between items-center">
+                        <span>{error}</span>
+                        <button 
+                            onClick={() => setError(null)}
+                            className="bg-transparent border-0 text-red-800 text-xl cursor-pointer hover:text-red-900"
+                        >
+                            ×
+                        </button>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="form-body">
-                    {form.questions.map((question, index) => {
-                        const isVisible = shouldShowQuestion(question.conditionalRules, answers);
+                <form onSubmit={handleSubmit} className="px-6 md:px-8 py-6 md:py-8">
+                    <div className="space-y-6">
+                        {form.questions.map((question, index) => {
+                            const isVisible = shouldShowQuestion(question.conditionalRules, answers);
 
-                        if (!isVisible) {
-                            return null;
-                        }
+                            if (!isVisible) {
+                                return null;
+                            }
 
-                        return (
-                            <FormField
-                                key={question.questionKey}
-                                question={question}
-                                value={answers[question.questionKey]}
-                                onChange={(value) => handleAnswerChange(question.questionKey, value)}
-                                error={validationErrors[question.questionKey]}
-                            />
-                        );
-                    })}
+                            return (
+                                <FormField
+                                    key={question.questionKey}
+                                    question={question}
+                                    value={answers[question.questionKey]}
+                                    onChange={(value) => handleAnswerChange(question.questionKey, value)}
+                                    error={validationErrors[question.questionKey]}
+                                />
+                            );
+                        })}
+                    </div>
 
-                    <div className="form-actions">
+                    <div className="mt-8 pt-6 border-t border-gray-200">
                         <button
                             type="submit"
-                            className="submit-button"
+                            className="w-full px-6 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-base transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-md"
                             disabled={submitting}
                         >
                             {submitting ? 'Uploading & Submitting...' : 'Submit'}

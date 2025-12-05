@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import ConditionBuilder from '../components/ConditionBuilder';
 import ServerStatus from '../components/ServerStatus';
-import '../styles/FormBuilder.css';
+import Navigation from '../components/Navigation';
+import { ArrowLeft, Save, X } from 'lucide-react';
 
 function FormBuilder() {
     const { formId } = useParams();
@@ -233,128 +234,162 @@ function FormBuilder() {
 
     if (loading) {
         return (
-            <div className="form-builder-container">
-                <div className="loading-state">
-                    <div className="loading-spinner"></div>
-                    <p>Loading form...</p>
+            <div className="min-h-screen bg-gray-50">
+                <div className="text-center py-16 px-5">
+                    <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading form...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="form-builder-container">
-            <header className="builder-header">
-                <button className="back-button" onClick={() => navigate('/dashboard')}>
-                    ← Back to Dashboard
-                </button>
-                <h1>{isEditing ? 'Edit Form' : 'Create New Form'}</h1>
-            </header>
+        <div className="min-h-screen bg-gray-50">
+            <Navigation />
 
             {error && (
-                <div className="error-banner">
-                    {error}
-                    <button onClick={() => setError(null)}>×</button>
+                <div className="bg-red-50 border-b border-red-200 text-red-800 px-5 md:px-10 py-3 flex justify-between items-center max-w-7xl mx-auto">
+                    <span className="text-sm">{error}</span>
+                    <button 
+                        onClick={() => setError(null)}
+                        className="bg-transparent border-0 text-red-800 text-xl cursor-pointer hover:text-red-900 p-1"
+                    >
+                        <X size={18} />
+                    </button>
                 </div>
             )}
 
-            <main className="builder-main">
+            <main className="max-w-4xl mx-auto px-5 md:px-10 py-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <button 
+                        className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm font-medium" 
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        <ArrowLeft size={16} />
+                        Back to Dashboard
+                    </button>
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{isEditing ? 'Edit Form' : 'Create New Form'}</h1>
+                    <p className="text-gray-600 text-sm mt-2">Build your form step by step</p>
+                </div>
                 {/* Form Details Section */}
-                <section className="builder-section">
-                    <h2>Form Details</h2>
-                    <div className="form-group">
-                        <label htmlFor="formName">Form Name *</label>
-                        <input
-                            id="formName"
-                            type="text"
-                            value={formName}
-                            onChange={(e) => setFormName(e.target.value)}
-                            placeholder="Enter form name"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="formDescription">Description</label>
-                        <textarea
-                            id="formDescription"
-                            value={formDescription}
-                            onChange={(e) => setFormDescription(e.target.value)}
-                            placeholder="Enter form description (optional)"
-                            rows={3}
-                        />
+                <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Step 1: Form Details</h2>
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="formName" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Form Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="formName"
+                                type="text"
+                                value={formName}
+                                onChange={(e) => setFormName(e.target.value)}
+                                placeholder="e.g., Customer Feedback Form"
+                                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="formDescription" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Description <span className="text-gray-400 text-xs">(optional)</span>
+                            </label>
+                            <textarea
+                                id="formDescription"
+                                value={formDescription}
+                                onChange={(e) => setFormDescription(e.target.value)}
+                                placeholder="Brief description of what this form is for"
+                                rows={3}
+                                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors resize-y"
+                            />
+                        </div>
                     </div>
                 </section>
 
                 {/* Airtable Selection Section */}
-                <section className="builder-section">
-                    <h2>Airtable Connection</h2>
-
-                    <div className="form-group">
-                        <label htmlFor="baseSelect">Select Base *</label>
-                        {loadingBases ? (
-                            <p className="loading-text">Loading bases...</p>
-                        ) : (
-                            <select
-                                id="baseSelect"
-                                value={selectedBase?.id || ''}
-                                onChange={handleBaseChange}
-                                disabled={isEditing}
-                            >
-                                <option value="">-- Select a Base --</option>
-                                {bases.map(base => (
-                                    <option key={base.id} value={base.id}>{base.name}</option>
-                                ))}
-                            </select>
-                        )}
-                    </div>
-
-                    {selectedBase && (
-                        <div className="form-group">
-                            <label htmlFor="tableSelect">Select Table *</label>
-                            {loadingTables ? (
-                                <p className="loading-text">Loading tables...</p>
+                <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Step 2: Connect to Airtable</h2>
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="baseSelect" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Select Base <span className="text-red-500">*</span>
+                            </label>
+                            {loadingBases ? (
+                                <div className="px-3 py-2 text-gray-500 text-sm bg-gray-50 rounded-lg">Loading bases...</div>
                             ) : (
                                 <select
-                                    id="tableSelect"
-                                    value={selectedTable?.id || ''}
-                                    onChange={handleTableChange}
+                                    id="baseSelect"
+                                    value={selectedBase?.id || ''}
+                                    onChange={handleBaseChange}
                                     disabled={isEditing}
+                                    className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors cursor-pointer disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:border-gray-300"
                                 >
-                                    <option value="">-- Select a Table --</option>
-                                    {tables.map(table => (
-                                        <option key={table.id} value={table.id}>{table.name}</option>
+                                    <option value="" className="text-gray-400">Choose a base...</option>
+                                    {bases.map(base => (
+                                        <option key={base.id} value={base.id} className="text-gray-900">{base.name}</option>
                                     ))}
                                 </select>
                             )}
                         </div>
-                    )}
+
+                        {selectedBase && (
+                            <div>
+                                <label htmlFor="tableSelect" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Select Table <span className="text-red-500">*</span>
+                                </label>
+                                {loadingTables ? (
+                                    <div className="px-3 py-2 text-gray-500 text-sm bg-gray-50 rounded-lg">Loading tables...</div>
+                                ) : (
+                                    <select
+                                        id="tableSelect"
+                                        value={selectedTable?.id || ''}
+                                        onChange={handleTableChange}
+                                        disabled={isEditing}
+                                        className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors cursor-pointer disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:border-gray-300"
+                                    >
+                                        <option value="" className="text-gray-400">Choose a table...</option>
+                                        {tables.map(table => (
+                                            <option key={table.id} value={table.id} className="text-gray-900">{table.name}</option>
+                                        ))}
+                                    </select>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </section>
 
                 {/* Field Selection Section */}
                 {selectedTable && (
-                    <section className="builder-section">
-                        <h2>Select Fields</h2>
-                        <p className="section-help">
-                            Click on fields to add them to your form. Only supported field types are shown.
+                    <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                        <h2 className="text-lg font-semibold text-gray-900 mb-2">Step 3: Select Fields</h2>
+                        <p className="text-gray-500 text-sm mb-4">
+                            Click fields to add them to your form
                         </p>
 
                         {loadingFields ? (
-                            <p className="loading-text">Loading fields...</p>
+                            <div className="px-3 py-2 text-gray-500 text-sm bg-gray-50 rounded-lg">Loading fields...</div>
                         ) : availableFields.length === 0 ? (
-                            <p className="empty-text">No supported fields found in this table.</p>
+                            <div className="px-3 py-2 text-gray-500 text-sm bg-gray-50 rounded-lg">No supported fields found in this table.</div>
                         ) : (
-                            <div className="fields-grid">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 {availableFields.map(field => {
                                     const isSelected = questions.some(q => q.airtableFieldId === field.id);
                                     return (
-                                        <div
+                                        <button
                                             key={field.id}
-                                            className={`field-card ${isSelected ? 'selected' : ''}`}
+                                            type="button"
+                                            className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${
+                                                isSelected 
+                                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-900' 
+                                                    : 'bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50'
+                                            }`}
                                             onClick={() => handleFieldSelect(field)}
                                         >
-                                            <span className="field-name">{field.name}</span>
-                                            <span className="field-type">{getFieldTypeLabel(field.type)}</span>
-                                            {isSelected && <span className="selected-badge">✓</span>}
-                                        </div>
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-medium text-sm">{field.name}</span>
+                                                {isSelected && <span className="text-indigo-600 font-bold text-base">✓</span>}
+                                            </div>
+                                            <span className="text-xs text-gray-500 mt-0.5 block">{getFieldTypeLabel(field.type)}</span>
+                                        </button>
                                     );
                                 })}
                             </div>
@@ -364,75 +399,83 @@ function FormBuilder() {
 
                 {/* Questions Configuration Section */}
                 {questions.length > 0 && (
-                    <section className="builder-section">
-                        <h2>Configure Questions</h2>
-                        <p className="section-help">
-                            Customize labels, mark as required, and add conditional logic.
+                    <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                        <h2 className="text-lg font-semibold text-gray-900 mb-2">Step 4: Configure Questions</h2>
+                        <p className="text-gray-500 text-sm mb-4">
+                            Customize your questions and add conditional logic
                         </p>
 
-                        <div className="questions-list">
+                        <div className="space-y-4">
                             {questions.map((question, index) => (
-                                <div key={question.questionKey} className="question-config">
-                                    <div className="question-header">
-                                        <div className="question-order">
+                                <div key={question.questionKey} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                    <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
+                                        <div className="flex items-center gap-2">
                                             <button
-                                                className="order-btn"
+                                                type="button"
+                                                className="p-1.5 bg-white border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed text-xs"
                                                 onClick={() => moveQuestion(index, -1)}
                                                 disabled={index === 0}
+                                                title="Move up"
                                             >
                                                 ↑
                                             </button>
-                                            <span>{index + 1}</span>
+                                            <span className="font-semibold text-gray-700 min-w-[1.5rem] text-center text-sm">Q{index + 1}</span>
                                             <button
-                                                className="order-btn"
+                                                type="button"
+                                                className="p-1.5 bg-white border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed text-xs"
                                                 onClick={() => moveQuestion(index, 1)}
                                                 disabled={index === questions.length - 1}
+                                                title="Move down"
                                             >
                                                 ↓
                                             </button>
                                         </div>
-                                        <span className="question-type">{getFieldTypeLabel(question.type)}</span>
+                                        <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded border border-gray-200">{getFieldTypeLabel(question.type)}</span>
                                         <button
-                                            className="remove-btn"
+                                            type="button"
+                                            className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
                                             onClick={() => removeQuestion(question.questionKey)}
+                                            title="Remove question"
                                         >
-                                            ×
+                                            <X size={16} />
                                         </button>
                                     </div>
 
-                                    <div className="question-body">
-                                        <div className="form-group">
-                                            <label>Label</label>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Question Label</label>
                                             <input
                                                 type="text"
                                                 value={question.label}
                                                 onChange={(e) => updateQuestion(question.questionKey, { label: e.target.value })}
-                                                placeholder="Question label"
+                                                placeholder="Enter question label"
+                                                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors"
                                             />
                                         </div>
 
-                                        <div className="form-group checkbox-group">
-                                            <label>
+                                        <div>
+                                            <label className="flex items-center gap-2 cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={question.required}
                                                     onChange={(e) => updateQuestion(question.questionKey, { required: e.target.checked })}
+                                                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                                                 />
-                                                Required
+                                                <span className="text-sm text-gray-700">Required field</span>
                                             </label>
                                         </div>
 
                                         {question.options?.length > 0 && (
-                                            <div className="form-group">
-                                                <label>Options</label>
-                                                <div className="options-preview">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Options</label>
+                                                <div className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-700">
                                                     {question.options.join(', ')}
                                                 </div>
                                             </div>
                                         )}
 
-                                        <div className="form-group">
-                                            <label>Conditional Logic</label>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Conditional Logic</label>
                                             <ConditionBuilder
                                                 rules={question.conditionalRules}
                                                 questions={questions}
@@ -448,18 +491,21 @@ function FormBuilder() {
                 )}
 
                 {/* Actions */}
-                <div className="builder-actions">
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                     <button
-                        className="cancel-button"
+                        type="button"
+                        className="px-5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium text-sm transition-all duration-200 hover:bg-gray-50"
                         onClick={() => navigate('/dashboard')}
                     >
                         Cancel
                     </button>
                     <button
-                        className="save-button"
+                        type="button"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-medium text-sm transition-all duration-200 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                         onClick={handleSave}
                         disabled={saving || !formName || !selectedBase || !selectedTable || questions.length === 0}
                     >
+                        <Save size={16} />
                         {saving ? 'Saving...' : (isEditing ? 'Update Form' : 'Create Form')}
                     </button>
                 </div>

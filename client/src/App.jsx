@@ -5,7 +5,6 @@ import Dashboard from './pages/Dashboard';
 import FormBuilder from './pages/FormBuilder';
 import FormViewer from './pages/FormViewer';
 import ResponseList from './pages/ResponseList';
-import './App.css';
 
 // Protected Route component
 function ProtectedRoute({ children }) {
@@ -13,12 +12,12 @@ function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mb-5"></div>
+        <p className="text-gray-600 text-base">Loading...</p>
       </div>
     );
-  }
+  } 
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -73,10 +72,15 @@ function AppRoutes() {
 
       {/* 404 */}
       <Route path="*" element={
-        <div className="not-found">
-          <h1>404</h1>
-          <p>Page not found</p>
-          <a href="/dashboard">Go to Dashboard</a>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center p-5">
+          <h1 className="text-[120px] text-indigo-600 m-0 font-bold">404</h1>
+          <p className="text-gray-600 m-0 mb-8 text-xl">Page not found</p>
+          <a 
+            href="/dashboard" 
+            className="px-7 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white no-underline rounded-lg font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            Go to Dashboard
+          </a>
         </div>
       } />
     </Routes>

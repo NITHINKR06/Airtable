@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../styles/ConditionBuilder.css';
 
 const OPERATORS = [
     { value: 'equals', label: 'Equals' },
@@ -90,8 +89,8 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
 
     if (availableQuestions.length === 0) {
         return (
-            <div className="condition-builder">
-                <p className="no-conditions-available">
+            <div className="mt-2">
+                <p className="text-gray-400 text-xs italic m-0">
                     Add questions above this one to create conditional logic.
                 </p>
             </div>
@@ -100,11 +99,15 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
 
     if (!isExpanded && (!rules || !rules.conditions?.length)) {
         return (
-            <div className="condition-builder">
-                <button type="button" className="add-condition-btn" onClick={() => {
-                    initializeRules();
-                    addCondition();
-                }}>
+            <div className="mt-2">
+                <button 
+                    type="button" 
+                    className="px-4 py-2.5 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-gray-600 text-sm cursor-pointer transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-700" 
+                    onClick={() => {
+                        initializeRules();
+                        addCondition();
+                    }}
+                >
                     + Add Condition
                 </button>
             </div>
@@ -112,41 +115,49 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
     }
 
     return (
-        <div className="condition-builder expanded">
-            <div className="conditions-header">
-                <span className="conditions-label">
+        <div className="mt-2 bg-gray-50 border border-gray-200 rounded-xl p-4 md:p-5">
+            <div className="flex items-center gap-3.5 mb-3.5">
+                <span className="text-xs text-gray-600 flex-1">
                     Show this question when
                 </span>
                 {rules?.conditions?.length > 1 && (
-                    <button type="button" className="logic-toggle" onClick={toggleLogic}>
+                    <button 
+                        type="button" 
+                        className="px-2.5 py-1 bg-indigo-600 text-white rounded text-xs font-semibold cursor-pointer hover:bg-indigo-700 transition-colors" 
+                        onClick={toggleLogic}
+                    >
                         {rules.logic}
                     </button>
                 )}
-                <button type="button" className="clear-btn" onClick={clearRules}>
+                <button 
+                    type="button" 
+                    className="px-2.5 py-1 bg-red-50 text-red-700 rounded text-xs cursor-pointer hover:bg-red-100 transition-colors" 
+                    onClick={clearRules}
+                >
                     Clear
                 </button>
             </div>
 
-            <div className="conditions-list">
+            <div className="flex flex-col gap-2.5 mb-3.5">
                 {rules?.conditions?.map((condition, index) => {
                     const questionType = getQuestionType(condition.questionKey);
                     const options = getQuestionOptions(condition.questionKey);
                     const isSelectType = questionType === 'singleSelect' || questionType === 'multipleSelects';
 
                     return (
-                        <div key={index} className="condition-row">
+                        <div key={index} className="flex items-center gap-3 flex-wrap">
                             {index > 0 && (
-                                <span className="logic-connector">{rules.logic}</span>
+                                <span className="text-xs text-indigo-600 font-semibold px-2 py-1 bg-indigo-50 rounded">{rules.logic}</span>
                             )}
 
                             <select
                                 value={condition.questionKey}
                                 onChange={(e) => updateCondition(index, 'questionKey', e.target.value)}
-                                className="condition-question"
+                                className="flex-1 min-w-[140px] px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors cursor-pointer"
                             >
-                                <option value="">Select question</option>
+                                <option value="" className="text-gray-400">Select question</option>
                                 {availableQuestions.map(q => (
-                                    <option key={q.questionKey} value={q.questionKey}>
+                                    <option key={q.questionKey} value={q.questionKey} className="text-gray-900">
                                         {q.label}
                                     </option>
                                 ))}
@@ -155,10 +166,10 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
                             <select
                                 value={condition.operator}
                                 onChange={(e) => updateCondition(index, 'operator', e.target.value)}
-                                className="condition-operator"
+                                className="w-[120px] px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors cursor-pointer"
                             >
                                 {OPERATORS.map(op => (
-                                    <option key={op.value} value={op.value}>{op.label}</option>
+                                    <option key={op.value} value={op.value} className="text-gray-900">{op.label}</option>
                                 ))}
                             </select>
 
@@ -166,11 +177,11 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
                                 <select
                                     value={condition.value}
                                     onChange={(e) => updateCondition(index, 'value', e.target.value)}
-                                    className="condition-value"
+                                    className="flex-1 min-w-[100px] px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors cursor-pointer"
                                 >
-                                    <option value="">Select value</option>
+                                    <option value="" className="text-gray-400">Select value</option>
                                     {options.map(opt => (
-                                        <option key={opt} value={opt}>{opt}</option>
+                                        <option key={opt} value={opt} className="text-gray-900">{opt}</option>
                                     ))}
                                 </select>
                             ) : (
@@ -179,13 +190,13 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
                                     value={condition.value}
                                     onChange={(e) => updateCondition(index, 'value', e.target.value)}
                                     placeholder="Value"
-                                    className="condition-value"
+                                    className="flex-1 min-w-[100px] px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 hover:border-gray-400 transition-colors"
                                 />
                             )}
 
                             <button
                                 type="button"
-                                className="remove-condition-btn"
+                                className="w-7 h-7 flex items-center justify-center bg-red-50 border-0 rounded text-red-700 cursor-pointer text-base flex-shrink-0 hover:bg-red-100 transition-colors"
                                 onClick={() => removeCondition(index)}
                             >
                                 ×
@@ -195,7 +206,11 @@ function ConditionBuilder({ rules, questions, currentQuestionKey, onChange }) {
                 })}
             </div>
 
-            <button type="button" className="add-condition-btn" onClick={addCondition}>
+            <button 
+                type="button" 
+                className="px-4 py-2.5 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-gray-600 text-sm cursor-pointer transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-700" 
+                onClick={addCondition}
+            >
                 + Add Condition
             </button>
         </div>
