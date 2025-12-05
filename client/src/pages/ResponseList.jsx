@@ -115,6 +115,28 @@ function ResponseList() {
                 </div>
                 <div className="header-right">
                     <span className="response-count">{responses.length} responses</span>
+                    {responses.length > 0 && (
+                        <div className="export-buttons">
+                            <button
+                                className="export-btn"
+                                onClick={() => {
+                                    const token = localStorage.getItem('token');
+                                    window.open(`${import.meta.env.VITE_API_URL}/forms/${formId}/responses/export/csv?token=${token}`, '_blank');
+                                }}
+                            >
+                                📥 CSV
+                            </button>
+                            <button
+                                className="export-btn"
+                                onClick={() => {
+                                    const token = localStorage.getItem('token');
+                                    window.open(`${import.meta.env.VITE_API_URL}/forms/${formId}/responses/export/json?token=${token}`, '_blank');
+                                }}
+                            >
+                                📥 JSON
+                            </button>
+                        </div>
+                    )}
                 </div>
             </header>
 

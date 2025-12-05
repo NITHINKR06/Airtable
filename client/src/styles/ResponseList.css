@@ -40,6 +40,12 @@
   font-size: 14px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .response-count {
   background: #667eea;
   color: white;
@@ -47,6 +53,29 @@
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.export-btn {
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-btn:hover {
+  background: #f8fafc;
+  border-color: #667eea;
+  color: #667eea;
 }
 
 .response-main {

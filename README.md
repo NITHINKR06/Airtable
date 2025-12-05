@@ -251,6 +251,8 @@ The application supports conditional display of questions based on previous answ
 | DELETE | `/api/forms/:id` | Delete form |
 | POST | `/api/forms/:id/submit` | Submit response |
 | GET | `/api/forms/:id/responses` | List responses |
+| GET | `/api/forms/:id/responses/export/json` | Export responses as JSON |
+| GET | `/api/forms/:id/responses/export/csv` | Export responses as CSV |
 
 ### Airtable
 

@@ -363,6 +363,123 @@ router.get('/:formId/responses', authenticate, async (req, res) => {
 });
 
 /**
+ * GET /api/forms/:formId/responses/export/json
+ * Export responses as JSON
+ */
+router.get('/:formId/responses/export/json', authenticate, async (req, res) => {
+    try {
+        const { formId } = req.params;
+
+        const form = await Form.findById(formId);
+        if (!form) {
+            return res.status(404).json({ error: { message: 'Form not found' } });
+        }
+
+        if (form.owner.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: { message: 'Not authorized' } });
+        }
+
+        const responses = await Response.find({ formId }).sort({ createdAt: -1 });
+
+        // Build export data with question labels
+        const exportData = responses.map(r => {
+            const formattedAnswers = {};
+            for (const [key, value] of Object.entries(r.answers || {})) {
+                const question = form.questions.find(q => q.questionKey === key);
+                const label = question?.label || key;
+                formattedAnswers[label] = value;
+            }
+            return {
+                id: r._id,
+                airtableRecordId: r.airtableRecordId,
+                status: r.status,
+                submittedAt: r.createdAt,
+                answers: formattedAnswers
+            };
+        });
+
+        res.setHeader('Content-Disposition', `attachment; filename="${form.name}-responses.json"`);
+        res.setHeader('Content-Type', 'application/json');
+        res.json(exportData);
+    } catch (error) {
+        console.error('Export JSON error:', error);
+        res.status(500).json({ error: { message: 'Failed to export responses' } });
+    }
+});
+
+/**
+ * GET /api/forms/:formId/responses/export/csv
+ * Export responses as CSV
+ */
+router.get('/:formId/responses/export/csv', authenticate, async (req, res) => {
+    try {
+        const { formId } = req.params;
+
+        const form = await Form.findById(formId);
+        if (!form) {
+            return res.status(404).json({ error: { message: 'Form not found' } });
+        }
+
+        if (form.owner.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: { message: 'Not authorized' } });
+        }
+
+        const responses = await Response.find({ formId }).sort({ createdAt: -1 });
+
+        // Build CSV headers
+        const questionLabels = form.questions.map(q => q.label);
+        const headers = ['ID', 'Airtable Record ID', 'Status', 'Submitted At', ...questionLabels];
+
+        // Build CSV rows
+        const rows = responses.map(r => {
+            const row = [
+                r._id.toString(),
+                r.airtableRecordId,
+                r.status,
+                new Date(r.createdAt).toISOString()
+            ];
+
+            // Add answers in order of questions
+            for (const question of form.questions) {
+                const value = r.answers?.[question.questionKey];
+                if (value === null || value === undefined) {
+                    row.push('');
+                } else if (Array.isArray(value)) {
+                    row.push(value.join('; '));
+                } else {
+                    row.push(String(value));
+                }
+            }
+
+            return row;
+        });
+
+        // Escape CSV values
+        const escapeCSV = (val) => {
+            if (val === null || val === undefined) return '';
+            const str = String(val);
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return `"${str.replace(/"/g, '""')}"`;
+            }
+            return str;
+        };
+
+        // Build CSV string
+        const csvContent = [
+            headers.map(escapeCSV).join(','),
+            ...rows.map(row => row.map(escapeCSV).join(','))
+        ].join('\n');
+
+        res.setHeader('Content-Disposition', `attachment; filename="${form.name}-responses.csv"`);
+        res.setHeader('Content-Type', 'text/csv');
+        res.send(csvContent);
+    } catch (error) {
+        console.error('Export CSV error:', error);
+        res.status(500).json({ error: { message: 'Failed to export responses' } });
+    }
+});
+
+/**
  * POST /api/forms/:formId/webhook
  * Create webhook for form's Airtable table
  */

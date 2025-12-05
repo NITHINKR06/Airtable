@@ -8,11 +8,15 @@ const { refreshAccessToken } = require('../utils/airtable');
  */
 const authenticate = async (req, res, next) => {
     try {
-        // Get token from header or cookie
+        // Get token from header, cookie, or query parameter (for file downloads)
         let token = req.headers.authorization?.replace('Bearer ', '');
 
         if (!token && req.cookies?.token) {
             token = req.cookies.token;
+        }
+
+        if (!token && req.query?.token) {
+            token = req.query.token;
         }
 
         if (!token) {
