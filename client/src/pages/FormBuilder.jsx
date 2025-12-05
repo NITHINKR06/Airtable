@@ -5,7 +5,8 @@ import api from '../api/client';
 import ConditionBuilder from '../components/ConditionBuilder';
 import ServerStatus from '../components/ServerStatus';
 import Navigation from '../components/Navigation';
-import { ArrowLeft, Save, X } from 'lucide-react';
+import FormPreview from '../components/FormPreview';
+import { ArrowLeft, Save, X, Eye } from 'lucide-react';
 
 function FormBuilder() {
     const { formId } = useParams();
@@ -34,6 +35,7 @@ function FormBuilder() {
     const [loadingFields, setLoadingFields] = useState(false);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
+    const [showPreview, setShowPreview] = useState(false);
 
     // Fetch bases on mount
     useEffect(() => {
@@ -248,7 +250,7 @@ function FormBuilder() {
             {error && (
                 <div className="bg-red-50 border-b border-red-200 text-red-800 px-5 md:px-10 py-3 flex justify-between items-center max-w-7xl mx-auto">
                     <span className="text-sm">{error}</span>
-                    <button 
+                    <button
                         onClick={() => setError(null)}
                         className="bg-transparent border-0 text-red-800 text-xl cursor-pointer hover:text-red-900 p-1"
                     >
@@ -260,8 +262,8 @@ function FormBuilder() {
             <main className="max-w-4xl mx-auto px-5 md:px-10 py-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <button 
-                        className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm font-medium" 
+                    <button
+                        className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm font-medium"
                         onClick={() => navigate('/dashboard')}
                     >
                         <ArrowLeft size={16} />
@@ -375,11 +377,10 @@ function FormBuilder() {
                                         <button
                                             key={field.id}
                                             type="button"
-                                            className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${
-                                                isSelected 
-                                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-900' 
-                                                    : 'bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50'
-                                            }`}
+                                            className={`p-3 rounded-lg border-2 text-left transition-all duration-200 ${isSelected
+                                                ? 'bg-indigo-50 border-indigo-500 text-indigo-900'
+                                                : 'bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50'
+                                                }`}
                                             onClick={() => handleFieldSelect(field)}
                                         >
                                             <div className="flex items-center justify-between">
@@ -499,6 +500,16 @@ function FormBuilder() {
                     </button>
                     <button
                         type="button"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-purple-300 text-purple-700 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() => setShowPreview(true)}
+                        disabled={questions.length === 0}
+                        title="Preview how your form will look to respondents"
+                    >
+                        <Eye size={16} />
+                        Preview
+                    </button>
+                    <button
+                        type="button"
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-medium text-sm transition-all duration-200 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                         onClick={handleSave}
                         disabled={saving || !formName || !selectedBase || !selectedTable || questions.length === 0}
@@ -509,6 +520,17 @@ function FormBuilder() {
                 </div>
             </main>
             <ServerStatus />
+
+            {/* Form Preview Modal */}
+            <FormPreview
+                form={{
+                    name: formName || 'Untitled Form',
+                    description: formDescription,
+                    questions
+                }}
+                isOpen={showPreview}
+                onClose={() => setShowPreview(false)}
+            />
         </div>
     );
 }

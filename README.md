@@ -6,9 +6,11 @@ A full-stack MERN application that allows users to create dynamic forms connecte
 
 - **Airtable OAuth Authentication** - Secure login using Airtable OAuth 2.0 with PKCE
 - **Dynamic Form Builder** - Create forms from Airtable table fields
+- **Form Preview Mode** - Live preview of forms with conditional logic evaluation
 - **Conditional Logic** - Show/hide questions based on previous answers (AND/OR logic)
 - **Form Submission** - Save responses to both Airtable and MongoDB
 - **Response Management** - View all form submissions with status tracking
+- **Export Responses** - Download responses as JSON or CSV
 - **Webhook Sync** - Automatic database updates when Airtable records change
 
 ## Tech Stack
@@ -313,6 +315,11 @@ Other field types are automatically filtered out.
 
 ## Screenshots
 
+### Login
+Secure Airtable OAuth authentication with server status indicator.
+
+![Login](client/public/form_login.png)
+
 ### Dashboard
 View all created forms with quick actions.
 
@@ -327,6 +334,9 @@ Build your form step by step with form details and Airtable connection.
 Modify existing forms and configure Airtable base and table connections.
 
 ![Edit Form](client/public/edit_form.png)
+
+### Form Preview
+Preview your form as respondents will see it, with live conditional logic evaluation.
 
 ### Form Responses
 View all submissions with expandable details, status tracking, and export options.
