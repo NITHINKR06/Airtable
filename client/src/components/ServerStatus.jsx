@@ -13,7 +13,7 @@ function ServerStatus() {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout for cold starts
 
-            const response = await fetch('https://airtabledynamicform.onrender.com/', {
+            const response = await fetch('https://airtabledynamicform.onrender.com/health', {
                 method: 'GET',
                 signal: controller.signal
             });
