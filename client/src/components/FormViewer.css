@@ -1,0 +1,27 @@
+.form-viewer {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.multi-select {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.multi-select label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+}
+
+.multi-select input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 5px;
+}
+
