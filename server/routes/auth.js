@@ -49,18 +49,29 @@ router.get('/login', (req, res) => {
             }
         }
 
-        // Build authorization URL
-        const params = new URLSearchParams({
-            client_id: process.env.AIRTABLE_CLIENT_ID,
-            redirect_uri: process.env.AIRTABLE_REDIRECT_URI,
-            response_type: 'code',
-            state: state,
-            code_challenge: challenge,
-            code_challenge_method: 'S256',
-            scope: 'data.records:read data.records:write schema.bases:read schema.bases:write webhook:manage'
-        });
+        // Build authorization URL - use only scopes that are enabled in Airtable OAuth app
+        const scopes = 'data.records:read data.records:write schema.bases:read schema.bases:write';
 
-        const authUrl = `https://airtable.com/oauth2/v1/authorize?${params.toString()}`;
+        const baseUrl = 'https://airtable.com/oauth2/v1/authorize';
+        const params = new URLSearchParams();
+        params.append('client_id', process.env.AIRTABLE_CLIENT_ID);
+        params.append('redirect_uri', process.env.AIRTABLE_REDIRECT_URI);
+        params.append('response_type', 'code');
+        params.append('state', state);
+        params.append('code_challenge', challenge);
+        params.append('code_challenge_method', 'S256');
+        params.append('scope', scopes);
+
+        const authUrl = `${baseUrl}?${params.toString()}`;
+
+        // Debug logging
+        console.log('=== OAuth Debug ===');
+        console.log('Client ID:', process.env.AIRTABLE_CLIENT_ID ? 'SET (' + process.env.AIRTABLE_CLIENT_ID.substring(0, 8) + '...)' : 'NOT SET');
+        console.log('Redirect URI:', process.env.AIRTABLE_REDIRECT_URI);
+        console.log('Scopes:', scopes);
+        console.log('Full Auth URL:', authUrl);
+        console.log('==================');
+
         res.redirect(authUrl);
     } catch (error) {
         console.error('Login error:', error);
