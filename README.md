@@ -62,7 +62,8 @@ newtask/
    - `data.records:write`
    - `schema.bases:read`
    - `schema.bases:write`
-   - `webhook:manage`
+   - `user.email:read`
+   - `webhook:manage` (optional, for webhook sync)
 5. Note your Client ID and Client Secret
 
 ## Installation
@@ -337,6 +338,7 @@ Modify existing forms and configure Airtable base and table connections.
 
 ### Form Preview
 Preview your form as respondents will see it, with live conditional logic evaluation.
+![Form Preview](client/public/form_preview.png)
 
 ### Form Responses
 View all submissions with expandable details, status tracking, and export options.
