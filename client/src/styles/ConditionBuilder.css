@@ -10,12 +10,12 @@
 }
 
 .add-condition-btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: #f1f5f9;
   border: 1px dashed #cbd5e1;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #64748b;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -29,15 +29,15 @@
 .condition-builder.expanded {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 18px;
 }
 
 .conditions-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
 .conditions-label {
@@ -78,14 +78,14 @@
 .conditions-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .condition-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -101,10 +101,10 @@
 .condition-question,
 .condition-operator,
 .condition-value {
-  padding: 8px 10px;
+  padding: 10px 12px;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: 8px;
+  font-size: 14px;
   background: white;
 }
 
@@ -114,7 +114,7 @@
 }
 
 .condition-operator {
-  width: 110px;
+  width: 120px;
 }
 
 .condition-value {

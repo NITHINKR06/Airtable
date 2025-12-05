@@ -1,5 +1,5 @@
 .form-field {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .form-field.has-error input,
@@ -12,8 +12,8 @@
   display: block;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 10px;
+  font-size: 15px;
 }
 
 .required-mark {
@@ -25,10 +25,10 @@
 .form-field textarea,
 .form-field select {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
@@ -56,8 +56,8 @@
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 8px 0;
+  gap: 12px;
+  padding: 10px 0;
 }
 
 .checkbox-group.error {
@@ -69,10 +69,10 @@
 .checkbox-option {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
   transition: background 0.2s;
 }
 
@@ -81,20 +81,20 @@
 }
 
 .checkbox-option input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
 }
 
 .checkbox-option span {
   color: #374151;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .file-upload-area {
   border: 2px dashed #e2e8f0;
-  border-radius: 8px;
-  padding: 24px;
+  border-radius: 10px;
+  padding: 28px;
   transition: all 0.2s;
 }
 
@@ -123,12 +123,12 @@
 
 .file-input-label {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: #667eea;
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   transition: background 0.2s;
 }
