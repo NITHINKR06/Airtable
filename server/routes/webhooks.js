@@ -13,12 +13,6 @@ router.post('/airtable', async (req, res) => {
     try {
         const { base, webhook, timestamp } = req.body;
 
-        console.log('Received Airtable webhook:', {
-            baseId: base?.id,
-            webhookId: webhook?.id,
-            timestamp
-        });
-
         // Acknowledge receipt immediately (Airtable expects quick response)
         res.status(200).json({ received: true });
 
@@ -37,7 +31,6 @@ router.post('/airtable', async (req, res) => {
  */
 async function processWebhook(baseId, webhookId) {
     if (!baseId || !webhookId) {
-        console.log('Missing baseId or webhookId');
         return;
     }
 
@@ -48,7 +41,6 @@ async function processWebhook(baseId, webhookId) {
     }).populate('owner');
 
     if (!form) {
-        console.log('No form found for webhook:', webhookId);
         return;
     }
 
@@ -103,8 +95,6 @@ async function processPayload(form, payload) {
                 if (changes.current?.cellValuesByFieldId) {
                     // Merge updated fields into answers
                     // Note: We'd need to map field IDs back to question keys
-                    console.log(`Record ${recordId} was updated in Airtable`);
-
                     response.updatedAt = new Date();
                     await response.save();
                 }
@@ -121,8 +111,6 @@ async function processPayload(form, payload) {
                 // Soft delete - mark as deleted in Airtable
                 response.status = 'deletedInAirtable';
                 await response.save();
-
-                console.log(`Record ${recordId} marked as deleted in Airtable`);
             }
         }
     }

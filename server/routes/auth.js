@@ -64,14 +64,6 @@ router.get('/login', (req, res) => {
 
         const authUrl = `${baseUrl}?${params.toString()}`;
 
-        // Debug logging
-        console.log('=== OAuth Debug ===');
-        console.log('Client ID:', process.env.AIRTABLE_CLIENT_ID ? 'SET (' + process.env.AIRTABLE_CLIENT_ID.substring(0, 8) + '...)' : 'NOT SET');
-        console.log('Redirect URI:', process.env.AIRTABLE_REDIRECT_URI);
-        console.log('Scopes:', scopes);
-        console.log('Full Auth URL:', authUrl);
-        console.log('==================');
-
         res.redirect(authUrl);
     } catch (error) {
         console.error('Login error:', error);
