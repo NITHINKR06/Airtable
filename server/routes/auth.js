@@ -50,7 +50,7 @@ router.get('/login', (req, res) => {
         }
 
         // Build authorization URL - use only scopes that are enabled in Airtable OAuth app
-        const scopes = 'data.records:read data.records:write schema.bases:read schema.bases:write';
+        const scopes = 'data.records:read data.records:write schema.bases:read schema.bases:write user.email:read';
 
         const baseUrl = 'https://airtable.com/oauth2/v1/authorize';
         const params = new URLSearchParams();

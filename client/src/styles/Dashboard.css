@@ -5,7 +5,7 @@
 
 .dashboard-header {
   background: white;
-  padding: 16px 32px;
+  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -14,7 +14,7 @@
 
 .header-left h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
   color: #1a1a2e;
 }
 
@@ -26,17 +26,18 @@
 
 .user-info {
   color: #64748b;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .logout-button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 14px;
 }
 
 .logout-button:hover {
@@ -45,9 +46,9 @@
 }
 
 .dashboard-main {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 32px;
+  padding: 40px;
 }
 
 .actions-bar {
@@ -59,12 +60,13 @@
 .create-button {
   display: inline-flex;
   align-items: center;
-  padding: 12px 24px;
+  padding: 14px 28px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 15px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -116,25 +118,25 @@
 
 .forms-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 28px;
 }
 
 .form-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .form-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
 }
 
 .form-card-header {
-  padding: 20px;
+  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -143,7 +145,7 @@
 
 .form-card-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
   color: #1a1a2e;
 }
 
@@ -165,7 +167,7 @@
 }
 
 .form-card-body {
-  padding: 20px;
+  padding: 24px;
 }
 
 .form-description {
@@ -193,22 +195,23 @@
 }
 
 .form-card-actions {
-  padding: 16px 20px;
+  padding: 18px 24px;
   background: #f8fafc;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .action-link,
 .action-button {
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 14px;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
+  font-weight: 500;
 }
 
 .action-link.view {
