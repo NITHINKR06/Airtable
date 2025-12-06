@@ -7,7 +7,17 @@ function Login() {
     const { login, isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const error = searchParams.get('error');
+    const [displayError, setDisplayError] = useState(null);
+
+    useEffect(() => {
+        const errorParam = searchParams.get('error');
+        if (errorParam) {
+            setDisplayError(errorParam);
+            // Clear URL without refreshing but keeping functionality
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, [searchParams]);
+
     const [serverStatus, setServerStatus] = useState('unknown'); // 'unknown' | 'checking' | 'awake' | 'sleeping'
 
     const checkServerHealth = async () => {
@@ -87,13 +97,14 @@ function Login() {
                 </div>
 
                 <div className="p-6 pt-4">
-                    {error && (
+                    {displayError && (
                         <div className="bg-red-50 border-l-4 border-red-500 text-red-800 p-4 rounded-lg mb-5 text-sm font-medium">
-                            {error === 'session_expired' && 'Your session has expired. Please log in again.'}
-                            {error === 'auth_failed' && 'Authentication failed. Please try again.'}
-                            {error === 'callback_failed' && 'Login failed. Please try again.'}
-                            {!['session_expired', 'auth_failed', 'callback_failed'].includes(error) &&
-                                `Error: ${error}`}
+                            {displayError === 'session_expired' && 'Your session has expired. Please log in again.'}
+                            {displayError === 'auth_failed' && 'Authentication failed. Please try again.'}
+                            {displayError === 'callback_failed' && 'Login failed. Please try again.'}
+                            {displayError === 'access_denied' && 'Access was denied. Please grant access to your Airtable bases to continue.'}
+                            {!['session_expired', 'auth_failed', 'callback_failed', 'access_denied'].includes(displayError) &&
+                                `Error: ${displayError}`}
                         </div>
                     )}
 
@@ -166,8 +177,8 @@ function Login() {
 
                         {serverStatus !== 'awake' && (
                             <p className={`flex items-center justify-center gap-1.5 text-xs p-2.5 rounded-lg ${serverStatus === 'checking'
-                                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                    : 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                : 'bg-yellow-50 text-yellow-800 border border-yellow-200'
                                 }`}>
                                 {serverStatus === 'checking'
                                     ? <><Clock size={14} /> Please wait while the server wakes up (may take 30-60 seconds)...</>
