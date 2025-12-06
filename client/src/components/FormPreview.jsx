@@ -122,17 +122,17 @@ function FormPreview({ form, isOpen, onClose }) {
     ) || [];
 
     return (
-        <div className="fixed inset-0 z-[9999] overflow-hidden">
+        <div className="fixed inset-0 z-[9999] overflow-y-auto">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={onClose}
             />
 
-            {/* Modal Container */}
-            <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8">
+            {/* Modal Container - Using min-h-full and py for proper centering */}
+            <div className="flex min-h-full items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8">
                 {/* Modal */}
-                <div className="relative w-full max-w-3xl max-h-full bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+                <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                     {/* Header */}
                     <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -149,8 +149,8 @@ function FormPreview({ form, isOpen, onClose }) {
                             <button
                                 onClick={() => setShowConditionalInfo(!showConditionalInfo)}
                                 className={`hidden sm:inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${showConditionalInfo
-                                        ? 'bg-white/30 text-white'
-                                        : 'bg-white/10 text-white/80 hover:bg-white/20'
+                                    ? 'bg-white/30 text-white'
+                                    : 'bg-white/10 text-white/80 hover:bg-white/20'
                                     }`}
                                 title="Toggle conditional logic info"
                             >
